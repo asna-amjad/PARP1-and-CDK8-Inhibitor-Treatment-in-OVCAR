@@ -9,6 +9,7 @@ The RNA-seq workflow consists of these stages:
 * Processing
 * Alignment
 * Differential Expresion analysis using CuffDiff
-* Data Visualization
+* Data Visualization (PCA, HeatMap, Venn diagrams, and Volcano Plots)
+* GO Analysis
 
 **Output:** Venn diagrams, Volcano plot and heatmaps for differentially expressed genes
