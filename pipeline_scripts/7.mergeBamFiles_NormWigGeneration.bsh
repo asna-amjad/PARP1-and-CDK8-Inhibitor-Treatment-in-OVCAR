@@ -1,0 +1,92 @@
+#!/bin/bash
+#SBATCH -J signalTracks_OV3                    
+#SBATCH -p super                            	
+#SBATCH -N 1                                  
+#SBATCH -t 0-20:35:30                             	
+#SBATCH -o 7.mergeBamFiles_RSeqcNormWigGeneration_OV3.bsh.o%j    
+#SBATCH --mail-user=asna.amjad@utsouthwestern.edu  
+#SBATCH --mail-type=BEGIN                               
+#SBATCH --mail-type=END                             
+#SBATCH --mail-type=FAIL                   
+
+
+
+##### Remove sequencerID to reduce file size from the bed files
+cd /project/aamjad/data/RawFiles/align-star-se.sh-1.0.0
+module load python/2.7.x-anaconda
+module load bedtools/2.25.0
+module load samtools/intel/1.3
+module add RSeQC/2.6.4
+
+export PATH=/project/aamjad//Scripts:$PATH
+export PATH=/home/softwares/executables:$PATH
+
+function MakeSignalTracks
+{
+##Sort replicates:
+samtools sort $FILENAME1.bam -o $FILENAME1.sorted.bam
+samtools sort $FILENAME2.bam -o $FILENAME2.sorted.bam
+
+
+##Merge replicates, sort & index:
+samtools merge $FILENAME5.bam $FILENAME1.sorted.bam $FILENAME2.sorted.bam
+samtools sort $FILENAME5.bam -o $FILENAME5.sorted.bam
+samtools index $FILENAME5.sorted.bam
+
+
+##Check the library type:
+infer_experiment.py -r hg38_refseq.bed -i $FILENAME5.sorted.bam #Can run this separately to understand "+-,-+" trend of the file
+
+##Convert bam to wig:
+bam2wig.py -s hg38.chrom.sizes -i $FILENAME5.sorted.bam -o $FILENAME5.sorted_strandSp -u -t 1336162400 -d "+-,-+"
+## 	Specified wigsum. 100000000 equals to coverage of 1 million 100nt reads. Ignore this option to disable normalization; In this case, read length is 100, average lib size is 100*13361624 = 1336162400
+}
+
+
+
+FILENAME1="OV3_DMSO_2_REP1_S1_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_DMSO_2_REP2_S17_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_DMSO_2"
+MakeSignalTracks
+
+FILENAME1="OV3_DMSO_4_REP1_S5_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_DMSO_4_REP2_S21_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_DMSO_4"
+MakeSignalTracks
+
+
+
+
+FILENAME1="OV3_BI_2_REP1_S3_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_BI_2_REP2_S19_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_BI_2"
+MakeSignalTracks
+
+
+FILENAME1="OV3_BI_4_REP1_S7_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_BI_4_REP2_S23_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_BI_4"
+MakeSignalTracks
+
+
+FILENAME1="OV3_BYK_2_REP1_S2_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_BYK_2_REP2_S18_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_BYK_2"
+MakeSignalTracks
+
+FILENAME1="OV3_BYK_4_REP1_S6_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_BYK_4_REP2_S22_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_BYK_4"
+MakeSignalTracks
+
+
+
+FILENAME1="OV3_BYK_plus_BI_2_REP1_S4_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_BYK_plus_BI_2_REP2_S20_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_BYK_plus_BI_2"
+MakeSignalTracks
+
+FILENAME1="OV3_BYK_plus_BI_4_REP1_S8_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME2="OV3_BYK_plus_BI_4_REP2_S24_R1_001.fastq.gz.Aligned.sortedByCoord.out"
+FILENAME5="OV3_BYK_plus_BI_4"
+MakeSignalTracks
