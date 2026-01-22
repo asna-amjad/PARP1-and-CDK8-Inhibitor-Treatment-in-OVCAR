@@ -1,26 +1,14 @@
 # PARP1-and-CDK8-Inhibitor-Treatment-in-OVCAR #
 # OVCAR3 and OVCAR4 Cell Lines #
 
-## Git Stages
-#############
-1. Working Directory
-   - local project folder
-   - bash: git status
-2. Staging Area (Index)
-   - git add, Git moves changes from the working directory into the staging area.
-   - git add .
-3. Repository (Committed)
-   - git commit, everything staged is saved permanently in Git’s history.
-   - git commit -m "Add main script"
-   - git push
-     
+**This repository consists of RNA-seq analysis done on highgrade serous ovarian cancer cell lines (OVCAR3 & OVCAR4), to study the independent effects of PARP1 or CDK8 inhibition on cancer cell growth.**
 
-## Steps
-gh auth login
-gh repo create
-gh repo list
-git clone https://github.com/asna-amjad/PARP1-and-CDK8-Inhibitor-Treatment-in-OVCAR.git   #go to repository
-git status 
-git add .
-git commit -m "first commit"
-git push
+The RNA-seq workflow consists of these stages:
+
+* QC Filtering
+* Processing
+* Alignment
+* Differential Expresion analysis using CuffDiff
+* Data Visualization
+
+**Output:** Venn diagrams, Volcano plot and heatmaps for differentially expressed genes
